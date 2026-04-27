@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | AetherBridge</title>
+    <link rel="stylesheet" href="../src/css/main.css">
+    <style>
+        .legal-content { max-width: 800px; margin: 120px auto; padding: 0 2rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 2rem; }
+        h2 { margin-top: 2rem; margin-bottom: 1rem; }
+        p { color: var(--text-muted); margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div id="custom-cursor"></div>
+    <nav>
+        <div class="nav-container">
+            <div class="logo" onclick="window.location.href='/'">Aether<span>Bridge</span></div>
+        </div>
+    </nav>
+
+    <div class="legal-content">
+        <h1>Privacy Policy</h1>
+        <p>Last updated: April 27, 2026</p>
+        
+        <h2>1. Data Collection</h2>
+        <p>AetherBridge collects minimal data required to facilitate API requests between your application and third-party providers. In development mode (Shadow Kernel), all data stays on your local machine.</p>
+
+        <h2>2. Security</h2>
+        <p>All data transmitted through the AetherBridge Proxy is encrypted using industry-standard TLS. We do not store your API secrets; they are passed directly to the providers or managed via environment variables.</p>
+        
+        <h2>3. Local Storage</h2>
+        <p>The Shadow Kernel may store mock data in a local JSON file (shadow-db.json) for persistence during development.</p>
+    </div>
+
+    <script type="module" src="../src/js/main.js"></script>
+</body>
+</html>
