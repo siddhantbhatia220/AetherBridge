@@ -11,18 +11,22 @@ AetherBridge is a high-performance, universal API translation layer designed to 
 - **Standardized Interfaces**: One method signature for all providers (Stripe, Twilio, AWS, etc.).
 - **Shadow Kernel**: Local development mocking engine. Develop offline with zero API keys.
 - **Smart Routing**: Intelligent proxy that switches providers based on cost, health, or latency.
-- **The "Eject" Command**: Zero vendor lock-in. Convert Aether calls to native provider code anytime.
-- **Time Machine Replay**: Record production errors and replay them in your local Shadow Kernel.
-- **Config-Driven Architecture**: Switch between local Shadow Kernel and real providers (Stripe, Twilio) via `aether-config.yaml`.
+- **The "Eject" Command**: Zero vendor lock-in. Advanced AST-based code transformation removes Aether calls safely.
+- **Time Machine Replay**: Persistent request logging via SQLite. Replay production errors anytime.
+- **Config-Driven Architecture**: Switch between local Shadow Kernel and real providers (Stripe, Twilio, Supabase, AWS S3).
 
 ---
 
+## 🛠 Production Readiness
+
+AetherBridge is 100% real-world compatible. Set `mode: production` in `aether-config.yaml` to activate high-performance SDKs.
 
 ### Environment Variables
-For production mode, ensure the following are set:
-- `STRIPE_SECRET_KEY`: Your live Stripe secret.
-- `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_FROM`: Your live Twilio credentials.
-- `PORT`: The port for the proxy server.
+For production mode, set the following:
+- **Payments**: `STRIPE_SECRET_KEY`
+- **Auth**: `SUPABASE_URL`, `SUPABASE_KEY`
+- **Notifications**: `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_FROM`
+- **Storage**: `AWS_REGION`, `AWS_BUCKET`, `AWS_ACCESS_KEY`, `AWS_SECRET_KEY`
 
 ## 🛠 Directory Structure
 
