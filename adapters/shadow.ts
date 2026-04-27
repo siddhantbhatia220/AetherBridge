@@ -1,6 +1,6 @@
-import { IAuthAdapter, UserProfile } from '../contracts/auth';
 import { IPaymentAdapter, PaymentSession } from '../contracts/payments';
 import { IStorageAdapter } from '../contracts/storage';
+import { INotificationProvider } from '../contracts/notifications';
 
 export class ShadowAuthAdapter implements IAuthAdapter {
   private users: Map<string, UserProfile> = new Map();
@@ -64,5 +64,17 @@ export class ShadowStorageAdapter implements IStorageAdapter {
 
   async deleteFile(key: string) {
     console.log(`[SHADOW STORAGE] File "Deleted": ${key}`);
+  }
+}
+
+export class ShadowNotificationAdapter implements INotificationProvider {
+  async sendSMS(to: string, message: string) {
+    console.log(`[SHADOW NOTIFY] SMS Sent to ${to}: ${message}`);
+    return { id: `mock_sms_${Date.now()}`, status: 'sent' };
+  }
+
+  async sendEmail(to: string, subject: string, body: string) {
+    console.log(`[SHADOW NOTIFY] Email Sent to ${to}: [${subject}]`);
+    return { id: `mock_email_${Date.now()}`, status: 'sent' };
   }
 }
