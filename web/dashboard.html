@@ -24,11 +24,28 @@
             overflow-y: auto;
             font-family: 'JetBrains Mono', monospace;
         }
-        .log-entry {
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            animation: fadeIn 0.3s ease-out;
+            font-size: 0.9rem;
+        }
+        .badge-status {
+            font-size: 0.7rem;
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--primary-light);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .console-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateX(-10px); }
@@ -55,21 +72,36 @@
 
     <div class="dashboard-grid">
         <aside class="sidebar">
-            <h3>Services</h3>
-            <ul style="list-style: none; margin-top: 1rem;">
-                <li style="padding: 0.5rem 0; color: var(--primary);">● Auth (Local)</li>
-                <li style="padding: 0.5rem 0; color: var(--primary);">● Payments (Mock)</li>
-                <li style="padding: 0.5rem 0; color: var(--primary);">● Storage (Local)</li>
-            </ul>
-        </aside>
-        <main class="console" id="log-console">
-            <div class="log-entry">
-                <div class="log-header">
-                    <span class="method">SYSTEM.INITIALIZE</span>
-                    <span class="timestamp">15:25:16</span>
+            <h3 style="margin-bottom: 2rem;">Cloud Status</h3>
+            <div class="service-list">
+                <div class="service-item">
+                    <span>Auth</span>
+                    <span class="badge-status">Active (Shadow)</span>
                 </div>
-                <p>Shadow Kernel v1.0.0 started. Monitoring localhost:3000...</p>
+                <div class="service-item">
+                    <span>Payments</span>
+                    <span class="badge-status">Active (Failover)</span>
+                </div>
+                <div class="service-item">
+                    <span>Storage</span>
+                    <span class="badge-status">Active (LocalFS)</span>
+                </div>
+                <div class="service-item">
+                    <span>Messaging</span>
+                    <span class="badge-status">Active (Mock)</span>
+                </div>
             </div>
+            <div style="margin-top: 4rem; opacity: 0.5; font-size: 0.8rem;">
+                <p>Monitoring: localhost:3000</p>
+                <p>Version: 1.0.0-gold</p>
+            </div>
+        </aside>
+        <main class="console">
+            <div class="console-header">
+                <h2>Real-Time Timeline</h2>
+                <button class="btn-primary" onclick="location.reload()" style="padding: 5px 15px; font-size: 0.8rem;">Clear Logs</button>
+            </div>
+            <div id="log-console"></div>
         </main>
     </div>
 
