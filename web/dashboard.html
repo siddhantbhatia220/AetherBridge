@@ -74,17 +74,26 @@
     </div>
 
     <script type="module">
-        import { bridge } from '../sdk/index.ts';
-
         const consoleEl = document.getElementById('log-console');
+        const logs = [];
+
+        window.replayLog = (index) => {
+            const log = logs[index];
+            addLog(`REPLAY: ${log.method}`, log.data, 'status-intercepted');
+            console.log(`[TIME MACHINE] Replaying ${log.method}...`);
+        };
 
         function addLog(method, data, status = 'intercepted') {
+            const index = logs.length;
+            logs.push({ method, data, status });
+            
             const entry = document.createElement('div');
             entry.className = 'log-entry';
             entry.innerHTML = `
                 <div class="log-header">
                     <span class="method">${method}</span>
                     <span class="timestamp">${new Date().toLocaleTimeString()}</span>
+                    <button onclick="replayLog(${index})" style="background: var(--primary); border: none; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer;">Replay</button>
                 </div>
                 <div class="status-${status}">Status: ${status.toUpperCase()}</div>
                 <div class="payload"><pre>${JSON.stringify(data, null, 2)}</pre></div>
@@ -100,6 +109,10 @@
         setTimeout(() => {
             addLog('AUTH.SIGNUP', { email: 'dev@example.local' });
         }, 4000);
+
+        setTimeout(() => {
+            addLog('NOTIFY.SEND_SMS', { to: '+1234567890', message: 'Welcome to AetherBridge!' });
+        }, 6000);
     </script>
     <script type="module" src="./src/js/main.js"></script>
 </body>
