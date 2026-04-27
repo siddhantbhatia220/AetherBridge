@@ -1,40 +1,42 @@
-import fs from 'fs';
+import { Project, SyntaxKind } from 'ts-morph';
 import path from 'path';
 
 /**
- * AetherBridge Eject CLI
- * Converts bridge.pay.initializePayment(...) -> stripe.paymentIntents.create(...)
+ * AetherBridge Advanced Eject CLI (AST Powered)
+ * Uses ts-morph to safely transform bridge calls into native SDK calls.
  */
 
+const project = new Project();
 const targetDir = process.argv[2] || './src';
 
-function ejectFile(filePath: string) {
-    let content = fs.readFileSync(filePath, 'utf-8');
-    
-    // Simple regex replacements for demonstration
-    const replacements = [
-        {
-            from: /bridge\.pay\.initializePayment\((.*)\)/g,
-            to: 'stripe.paymentIntents.create($1)'
-        },
-        {
-            from: /bridge\.auth\.signUp\((.*)\)/g,
-            to: 'supabase.auth.signUp($1)'
-        }
-    ];
+console.log(`[AetherBridge] AST Eject initialized. Scanning ${targetDir}...`);
 
-    let modified = content;
-    replacements.forEach(r => {
-        modified = modified.replace(r.from, r.to);
+project.addSourceFilesAtPaths(path.join(targetDir, '**/*.ts'));
+
+project.getSourceFiles().forEach(sourceFile => {
+    let changed = false;
+
+    // Find all CallExpressions (e.g., bridge.pay.initializePayment(...))
+    sourceFile.getDescendantsOfKind(SyntaxKind.CallExpression).forEach(call => {
+        const text = call.getExpression().getText();
+
+        // Transformation Map
+        if (text === 'bridge.pay.initializePayment') {
+            call.getExpression().replaceWithText('stripe.paymentIntents.create');
+            changed = true;
+        } else if (text === 'bridge.auth.signUp') {
+            call.getExpression().replaceWithText('supabase.auth.signUp');
+            changed = true;
+        } else if (text === 'bridge.notify.sendSMS') {
+            call.getExpression().replaceWithText('twilio.messages.create');
+            changed = true;
+        }
     });
 
-    if (modified !== content) {
-        fs.writeFileSync(filePath, modified);
-        console.log(`[EJECT] Converted Aether calls in: ${filePath}`);
+    if (changed) {
+        console.log(`[EJECT] Successfully transformed: ${sourceFile.getBaseName()}`);
+        sourceFile.saveSync();
     }
-}
+});
 
-console.log(`[AetherBridge] Scanning ${targetDir} for Aether calls...`);
-// Recursively scan files (simplified)
-// In a real app, this would use a proper AST parser like Babel
-ejectFile(path.join(targetDir, 'main.ts'));
+console.log('[AetherBridge] Eject complete. Your code is now native.');
