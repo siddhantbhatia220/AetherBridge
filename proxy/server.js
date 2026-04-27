@@ -2,8 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { ShadowAuthAdapter, ShadowPaymentAdapter } from '../adapters/shadow.js';
-import { StripeAdapter } from '../adapters/payments-stripe.js';
+import { loadConfig, ProviderFactory } from './factory.js';
 
 dotenv.config();
 
@@ -14,16 +13,18 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
-// Intelligent Switch Mechanism
-const useStripe = process.env.PAYMENT_PROVIDER === 'stripe';
-const auth = new ShadowAuthAdapter();
-const pay = useStripe 
-    ? new StripeAdapter(process.env.STRIPE_SECRET_KEY || '') 
-    : new ShadowPaymentAdapter();
+// Load Real Configuration
+const config = loadConfig();
+console.log(`\x1b[35m[AetherBridge]\x1b[0m Running in ${config.mode} mode`);
+
+// Initialize Providers via Factory
+const auth = ProviderFactory.createAuthProvider(config);
+const pay = ProviderFactory.createPaymentProvider(config);
+const notify = ProviderFactory.createNotificationProvider(config);
 
 // Health Check
 app.get('/health', (req, res) => {
-    res.json({ status: 'healthy', version: '1.0.0' });
+    res.json({ status: 'healthy', version: '1.0.0', mode: config.mode });
 });
 
 // Unified Auth Routes
@@ -33,6 +34,7 @@ app.post('/auth/signup', async (req, res) => {
         const user = await auth.signUp(email, password);
         res.json(user);
     } catch (err) {
+        console.error(`[AUTH ERROR] ${err.message}`);
         res.status(500).json({ error: err.message });
     }
 });
@@ -44,11 +46,26 @@ app.post('/pay/initialize', async (req, res) => {
         const session = await pay.initializePayment(amount, currency, customerId);
         res.json(session);
     } catch (err) {
+        console.error(`[PAYMENT ERROR] ${err.message}`);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Unified Notification Routes
+app.post('/notify/sms', async (req, res) => {
+    try {
+        const { to, message } = req.body;
+        const result = await notify.sendSMS(to, message);
+        res.json(result);
+    } catch (err) {
+        console.error(`[NOTIFY ERROR] ${err.message}`);
         res.status(500).json({ error: err.message });
     }
 });
 
 app.listen(PORT, () => {
     console.log(`\x1b[35m[AetherBridge Proxy]\x1b[0m Listening on port ${PORT}`);
-    console.log(`\x1b[36m[Mode]\x1b[0m Shadow Kernel Active`);
+    if (config.mode === 'development') {
+        console.log(`\x1b[36m[Shadow Kernel]\x1b[0m Intercepting all calls locally.`);
+    }
 });
