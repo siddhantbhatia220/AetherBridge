@@ -39,4 +39,27 @@ project.getSourceFiles().forEach(sourceFile => {
     }
 });
 
+// Generate Migration Report
+const reportPath = path.join(process.cwd(), 'MIGRATION_REPORT.md');
+const reportContent = `
+# 🛠 AetherBridge Migration Report
+Generated on: ${new Date().toLocaleString()}
+
+## 🔑 Required Native Environment Variables
+Since you have ejected to native SDKs, ensure you rename your Aether variables to the following:
+
+| Service | Native Variable | Source Variable |
+| :--- | :--- | :--- |
+| **Stripe** | \`STRIPE_SECRET_KEY\` | \`STRIPE_SECRET_KEY\` |
+| **Supabase** | \`SUPABASE_URL\`, \`SUPABASE_KEY\` | \`SUPABASE_URL\`, \`SUPABASE_KEY\` |
+| **Twilio** | \`TWILIO_ACCOUNT_SID\`, \`TWILIO_AUTH_TOKEN\` | \`TWILIO_SID\`, \`TWILIO_TOKEN\` |
+
+## 📦 Next Steps
+1. Uninstall \`@aetherbridge/sdk\`.
+2. Install native SDKs: \`npm install stripe @supabase/supabase-js twilio\`.
+3. Update your provider initializations in the converted files.
+`;
+
+fs.writeFileSync(reportPath, reportContent);
+console.log(`[AetherBridge] Migration report generated: ${reportPath}`);
 console.log('[AetherBridge] Eject complete. Your code is now native.');
