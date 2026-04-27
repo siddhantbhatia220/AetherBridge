@@ -13,8 +13,16 @@ AetherBridge is a high-performance, universal API translation layer designed to 
 - **Smart Routing**: Intelligent proxy that switches providers based on cost, health, or latency.
 - **The "Eject" Command**: Zero vendor lock-in. Convert Aether calls to native provider code anytime.
 - **Time Machine Replay**: Record production errors and replay them in your local Shadow Kernel.
+- **Config-Driven Architecture**: Switch between local Shadow Kernel and real providers (Stripe, Twilio) via `aether-config.yaml`.
 
 ---
+
+
+### Environment Variables
+For production mode, ensure the following are set:
+- `STRIPE_SECRET_KEY`: Your live Stripe secret.
+- `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_FROM`: Your live Twilio credentials.
+- `PORT`: The port for the proxy server.
 
 ## 🛠 Directory Structure
 
