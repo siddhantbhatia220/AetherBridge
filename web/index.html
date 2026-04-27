@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AetherBridge | The Final Integration You’ll Ever Write</title>
+    <meta name="description" content="AetherBridge is a universal API translation layer that eliminates integration friction.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./src/css/main.css">
+</head>
+<body>
+    <div id="custom-cursor"></div>
+    <div class="glow-bg"></div>
+    
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Aether<span>Bridge</span></div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#docs">Docs</a>
+                <a href="#pricing">Pricing</a>
+                <button class="btn-primary">Get Started</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <div class="badge">v1.0.0 is live</div>
+                <h1>The Final Integration <br><span>You’ll Ever Write.</span></h1>
+                <p>Stop wrestling with third-party SDKs. One standard, zero lock-in, and a local Shadow Kernel that works even without internet.</p>
+                <div class="hero-btns">
+                    <button class="btn-primary-lg">Start Building Free</button>
+                    <button class="btn-secondary-lg">View Documentation</button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="code-card">
+                    <div class="code-header">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="title">main.ts</span>
+                    </div>
+                    <div class="code-body">
+                        <pre><code><span class="keyword">import</span> { bridge } <span class="keyword">from</span> <span class="string">'@aether/sdk'</span>;
+
+<span class="comment">// Works in Dev (Shadow) & Prod</span>
+<span class="keyword">const</span> res = <span class="keyword">await</span> bridge.pay.<span class="func">initializePayment</span>({
+  amount: <span class="number">99</span>,
+  currency: <span class="string">'USD'</span>
+});
+
+<span class="comment">// No more Stripe vs PayPal logic.</span>
+<span class="func">console</span>.<span class="func">log</span>(res.clientSecret);</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="section-header">
+                <h2>Why AetherBridge?</h2>
+                <p>Engineered for developers who hate plumbing and love building.</p>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon">🛡️</div>
+                    <h3>Shadow Kernel</h3>
+                    <p>Develop offline with local mocks that behave exactly like real APIs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🔀</div>
+                    <h3>Smart Routing</h3>
+                    <p>Automatically switch providers based on cost, health, or latency.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">⚡</div>
+                    <h3>Zero Latency</h3>
+                    <p>Edge-compatible proxy ensures your integrations never slow you down.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">📤</div>
+                    <h3>The Eject Button</h3>
+                    <p>Change your mind? Eject to native code anytime. No vendor lock-in.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-info">
+                <div class="logo">Aether<span>Bridge</span></div>
+                <p>Standardizing the Cloud Interface.</p>
+            </div>
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>Product</h4>
+                    <a href="/docs">Documentation</a>
+                    <a href="/changelog">Changelog</a>
+                </div>
+                <div class="link-group">
+                    <h4>Legal</h4>
+                    <a href="/privacy">Privacy Policy</a>
+                    <a href="/terms">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 AetherBridge. All rights reserved.
+        </div>
+    </footer>
+
+    <script type="module" src="./src/js/main.js"></script>
+</body>
+</html>
