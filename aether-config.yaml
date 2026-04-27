@@ -1,0 +1,18 @@
+# AetherBridge Configuration
+mode: development # Options: development, production
+
+services:
+  auth:
+    provider: shadow # Options: shadow, supabase, auth0
+    config:
+      apiKey: ${SUPABASE_KEY}
+  
+  payments:
+    provider: shadow # Options: shadow, stripe, paypal
+    config:
+      apiKey: ${STRIPE_KEY}
+  
+  storage:
+    provider: shadow # Options: shadow, s3, cloudinary
+    config:
+      bucket: my-bucket
