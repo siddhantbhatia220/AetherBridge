@@ -52,10 +52,27 @@ export class ShadowPaymentAdapter implements IPaymentAdapter {
   }
 }
 
+import fs from 'fs';
+import path from 'path';
+
 export class ShadowStorageAdapter implements IStorageAdapter {
-  async uploadFile(file: any, path: string) {
-    console.log(`[SHADOW STORAGE] File "Uploaded" to: ${path}`);
-    return { url: `http://localhost:3000/shadow-storage/${path}`, key: path };
+  private storageDir = path.join(process.cwd(), 'shadow-storage');
+
+  constructor() {
+    if (!fs.existsSync(this.storageDir)) {
+      fs.mkdirSync(this.storageDir, { recursive: true });
+    }
+  }
+
+  async uploadFile(file: any, fileName: string) {
+    const filePath = path.join(this.storageDir, fileName);
+    // In a real Node environment, 'file' would be a Buffer from multer
+    fs.writeFileSync(filePath, file);
+    console.log(`[SHADOW STORAGE] File saved locally: ${filePath}`);
+    return { 
+      url: `http://localhost:3000/shadow-storage/${fileName}`, 
+      key: fileName 
+    };
   }
 
   async getFileUrl(key: string) {
@@ -63,7 +80,11 @@ export class ShadowStorageAdapter implements IStorageAdapter {
   }
 
   async deleteFile(key: string) {
-    console.log(`[SHADOW STORAGE] File "Deleted": ${key}`);
+    const filePath = path.join(this.storageDir, key);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      console.log(`[SHADOW STORAGE] File deleted locally: ${key}`);
+    }
   }
 }
 
