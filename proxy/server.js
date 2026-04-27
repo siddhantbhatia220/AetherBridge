@@ -3,6 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { ShadowAuthAdapter, ShadowPaymentAdapter } from '../adapters/shadow.js';
+import { StripeAdapter } from '../adapters/payments-stripe.js';
 
 dotenv.config();
 
@@ -13,9 +14,12 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
-// Singleton Instances (In prod, these would switch based on config)
+// Intelligent Switch Mechanism
+const useStripe = process.env.PAYMENT_PROVIDER === 'stripe';
 const auth = new ShadowAuthAdapter();
-const pay = new ShadowPaymentAdapter();
+const pay = useStripe 
+    ? new StripeAdapter(process.env.STRIPE_SECRET_KEY || '') 
+    : new ShadowPaymentAdapter();
 
 // Health Check
 app.get('/health', (req, res) => {
