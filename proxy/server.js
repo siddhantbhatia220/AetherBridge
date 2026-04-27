@@ -12,6 +12,17 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
+app.use('/shadow-storage', express.static('shadow-storage'));
+
+// Failover Wrapper
+const withFailover = async (primaryFn, fallbackFn) => {
+    try {
+        return await primaryFn();
+    } catch (err) {
+        console.warn(`[FAILOVER] Primary provider failed: ${err.message}. Triggering secondary...`);
+        return await fallbackFn();
+    }
+};
 
 // Load Real Configuration
 const config = loadConfig();
@@ -43,7 +54,11 @@ app.post('/auth/signup', async (req, res) => {
 app.post('/pay/initialize', async (req, res) => {
     try {
         const { amount, currency, customerId } = req.body;
-        const session = await pay.initializePayment(amount, currency, customerId);
+        // Automatically fails over to Shadow if Stripe/PayPal fails
+        const session = await withFailover(
+            () => pay.initializePayment(amount, currency, customerId),
+            () => new ShadowPaymentAdapter().initializePayment(amount)
+        );
         res.json(session);
     } catch (err) {
         console.error(`[PAYMENT ERROR] ${err.message}`);
