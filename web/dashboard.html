@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Kernel | Local Dev Dashboard</title>
+    <link rel="stylesheet" href="./src/css/main.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: calc(100vh - 80px);
+            margin-top: 80px;
+            gap: 1px;
+            background: var(--border);
+        }
+        .sidebar {
+            background: #0d0d0f;
+            padding: 2rem;
+        }
+        .console {
+            background: #050505;
+            padding: 2rem;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .log-entry {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .log-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .method { color: #c678dd; font-weight: bold; }
+        .timestamp { color: var(--text-muted); font-size: 0.8rem; }
+        .payload { background: rgba(255, 255, 255, 0.03); padding: 1rem; border-radius: 8px; margin-top: 0.5rem; }
+        .status-success { color: #98c379; }
+        .status-intercepted { color: #61afef; }
+    </style>
+</head>
+<body>
+    <div id="custom-cursor"></div>
+    <nav>
+        <div class="nav-container">
+            <div class="logo" onclick="window.location.href='/'">Aether<span>Bridge</span></div>
+            <div class="nav-links">
+                <span class="status-intercepted">● Shadow Mode Active</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-grid">
+        <aside class="sidebar">
+            <h3>Services</h3>
+            <ul style="list-style: none; margin-top: 1rem;">
+                <li style="padding: 0.5rem 0; color: var(--primary);">● Auth (Local)</li>
+                <li style="padding: 0.5rem 0; color: var(--primary);">● Payments (Mock)</li>
+                <li style="padding: 0.5rem 0; color: var(--primary);">● Storage (Local)</li>
+            </ul>
+        </aside>
+        <main class="console" id="log-console">
+            <div class="log-entry">
+                <div class="log-header">
+                    <span class="method">SYSTEM.INITIALIZE</span>
+                    <span class="timestamp">15:25:16</span>
+                </div>
+                <p>Shadow Kernel v1.0.0 started. Monitoring localhost:3000...</p>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { bridge } from '../sdk/index.ts';
+
+        const consoleEl = document.getElementById('log-console');
+
+        function addLog(method, data, status = 'intercepted') {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `
+                <div class="log-header">
+                    <span class="method">${method}</span>
+                    <span class="timestamp">${new Date().toLocaleTimeString()}</span>
+                </div>
+                <div class="status-${status}">Status: ${status.toUpperCase()}</div>
+                <div class="payload"><pre>${JSON.stringify(data, null, 2)}</pre></div>
+            `;
+            consoleEl.prepend(entry);
+        }
+
+        // Simulate some calls
+        setTimeout(() => {
+            addLog('PAY.INITIALIZE', { amount: 99, currency: 'USD', customerId: 'mock_123' });
+        }, 2000);
+
+        setTimeout(() => {
+            addLog('AUTH.SIGNUP', { email: 'dev@example.local' });
+        }, 4000);
+    </script>
+    <script type="module" src="./src/js/main.js"></script>
+</body>
+</html>
