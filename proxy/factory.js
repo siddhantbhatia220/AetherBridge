@@ -1,8 +1,10 @@
 import fs from 'fs';
 import yaml from 'js-yaml';
 import { StripeAdapter } from '../adapters/payments-stripe.js';
-import { ShadowPaymentAdapter, ShadowAuthAdapter, ShadowNotificationAdapter } from '../adapters/shadow.js';
+import { ShadowPaymentAdapter, ShadowAuthAdapter, ShadowNotificationAdapter, ShadowStorageAdapter } from '../adapters/shadow.js';
 import { TwilioAdapter } from '../adapters/notify-twilio.js';
+import { S3Adapter } from '../adapters/storage-s3.js';
+import { SupabaseAuthAdapter } from '../adapters/auth-supabase.js';
 
 export class ProviderFactory {
   static createPaymentProvider(config) {
@@ -13,7 +15,9 @@ export class ProviderFactory {
   }
 
   static createAuthProvider(config) {
-    // For now, always returning shadow as placeholder for Supabase/Auth0
+    if (config.mode === 'production' && config.services.auth.provider === 'supabase') {
+      return new SupabaseAuthAdapter(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+    }
     return new ShadowAuthAdapter();
   }
 
@@ -26,6 +30,18 @@ export class ProviderFactory {
       );
     }
     return new ShadowNotificationAdapter();
+  }
+
+  static createStorageProvider(config) {
+    if (config.mode === 'production' && config.services.storage.provider === 's3') {
+      return new S3Adapter(
+        process.env.AWS_REGION,
+        process.env.AWS_BUCKET,
+        process.env.AWS_ACCESS_KEY,
+        process.env.AWS_SECRET_KEY
+      );
+    }
+    return new ShadowStorageAdapter();
   }
 }
 
