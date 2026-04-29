@@ -1,5 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { IAuthAdapter, UserProfile } from '../contracts/auth';
+import { IAuthAdapter, UserProfile } from '../contracts/auth.js';
 
 export class SupabaseAuthAdapter implements IAuthAdapter {
   private client: SupabaseClient;

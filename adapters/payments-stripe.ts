@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { IPaymentAdapter, PaymentSession } from '../contracts/payments';
+import { IPaymentAdapter, PaymentSession } from '../contracts/payments.js';
 
 export class StripeAdapter implements IPaymentAdapter {
   private stripe: Stripe;

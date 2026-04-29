@@ -1,6 +1,78 @@
-import { IPaymentAdapter, PaymentSession } from '../contracts/payments';
-import { IStorageAdapter } from '../contracts/storage';
-import { INotificationProvider } from '../contracts/notifications';
+import { IPaymentAdapter, PaymentSession } from '../contracts/payments.js';
+import { IStorageAdapter } from '../contracts/storage.js';
+import { INotificationProvider } from '../contracts/notifications.js';
+import { IAuthAdapter, UserProfile } from '../contracts/auth.js';
+import { IDataBridge, PhoneData } from '../contracts/data.js';
+import { IAIBridge } from '../contracts/ai.js';
+import fs from 'fs';
+import path from 'path';
+import pkg from 'google-libphonenumber';
+const { PhoneNumberUtil, PhoneNumberFormat } = pkg;
+
+export class DataPhoneNumberAdapter implements IDataBridge {
+  private phoneUtil = PhoneNumberUtil.getInstance();
+
+  async parsePhone(text: string, defaultRegion: string = 'US'): Promise<PhoneData[]> {
+    const results: PhoneData[] = [];
+    const phoneRegex = /(\+?\d[\d\s\-\(\)]{7,}\d)/g;
+    const matches = text.match(phoneRegex) || [];
+
+    for (const match of matches) {
+      try {
+        const number = this.phoneUtil.parseAndKeepRawInput(match, defaultRegion);
+        const isValid = this.phoneUtil.isValidNumber(number);
+        results.push({
+          isValid,
+          internationalFormat: isValid ? this.phoneUtil.format(number, PhoneNumberFormat.INTERNATIONAL) : match,
+          nationalFormat: isValid ? this.phoneUtil.format(number, PhoneNumberFormat.NATIONAL) : match,
+          countryCode: isValid ? this.phoneUtil.getRegionCodeForNumber(number) || '' : ''
+        });
+      } catch (e) {}
+    }
+    return results;
+  }
+}
+
+export class ShadowAIAdapter implements IAIBridge {
+  async summarize(text: string): Promise<string> {
+    console.log(`[SHADOW AI] Summarizing: ${text.substring(0, 50)}...`);
+    return `Summarized: ${text.substring(0, 20)}... (Shadow Mode)`;
+  }
+  async analyze(data: any): Promise<any> {
+    console.log(`[SHADOW AI] Analyzing data...`);
+    return { status: "success", insight: "This looks like interesting data." };
+  }
+  async generate(prompt: string): Promise<string> {
+    console.log(`[SHADOW AI] Generating for: ${prompt}`);
+    return `Generated response for: ${prompt} (Shadow Mode)`;
+  }
+  async extractDataFromImages(images: string[]): Promise<any[]> {
+    console.log(`[SHADOW AI] Extracting data from ${images.length} images...`);
+    return images.map((_, i) => ({
+      name: `Person ${i + 1}`,
+      phone: `+1 555-010${i}`,
+      confidence: 0.95
+    }));
+  }
+}
+
+// Placeholder for real Gemini adapter (requires @google/generative-ai)
+export class GeminiAIAdapter implements IAIBridge {
+  constructor(private apiKey: string) {}
+  async summarize(text: string): Promise<string> {
+    return `[GEMINI] Summary of: ${text.substring(0, 50)}...`;
+  }
+  async analyze(data: any): Promise<any> {
+    return { analysis: "Deep insight from Gemini" };
+  }
+  async generate(prompt: string): Promise<string> {
+    return `[GEMINI] Responding to: ${prompt}`;
+  }
+  async extractDataFromImages(images: string[]): Promise<any[]> {
+    // In a real implementation, you'd send base64 to Gemini Pro Vision
+    return [{ name: "Extracted Name", phone: "+1 234 567 890" }];
+  }
+}
 
 export class ShadowAuthAdapter implements IAuthAdapter {
   private users: Map<string, UserProfile> = new Map();
@@ -52,9 +124,6 @@ export class ShadowPaymentAdapter implements IPaymentAdapter {
   }
 }
 
-import fs from 'fs';
-import path from 'path';
-
 export class ShadowStorageAdapter implements IStorageAdapter {
   private storageDir = path.join(process.cwd(), 'shadow-storage');
 
@@ -66,7 +135,6 @@ export class ShadowStorageAdapter implements IStorageAdapter {
 
   async uploadFile(file: any, fileName: string) {
     const filePath = path.join(this.storageDir, fileName);
-    // In a real Node environment, 'file' would be a Buffer from multer
     fs.writeFileSync(filePath, file);
     console.log(`[SHADOW STORAGE] File saved locally: ${filePath}`);
     return { 
@@ -97,5 +165,17 @@ export class ShadowNotificationAdapter implements INotificationProvider {
   async sendEmail(to: string, subject: string, body: string) {
     console.log(`[SHADOW NOTIFY] Email Sent to ${to}: [${subject}]`);
     return { id: `mock_email_${Date.now()}`, status: 'sent' };
+  }
+}
+
+export class ShadowDataAdapter implements IDataBridge {
+  async parsePhone(text: string): Promise<PhoneData[]> {
+    console.log(`[SHADOW DATA] Extracting phone numbers from text...`);
+    return [{
+      isValid: true,
+      internationalFormat: "+1 650-253-0000",
+      nationalFormat: "(650) 253-0000",
+      countryCode: "US"
+    }];
   }
 }

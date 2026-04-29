@@ -1,12 +1,14 @@
-import { Twilio } from 'twilio';
-import { INotificationProvider } from '../contracts/notifications';
+import twilio from 'twilio';
+import { INotificationProvider } from '../contracts/notifications.js';
+
+const { Twilio } = twilio;
 
 export class TwilioAdapter implements INotificationProvider {
-  private client: Twilio;
+  private client: any;
   private fromNumber: string;
 
   constructor(sid: string, token: string, from: string) {
-    this.client = new Twilio(sid, token);
+    this.client = new (Twilio as any)(sid, token);
     this.fromNumber = from;
   }
 
@@ -19,7 +21,7 @@ export class TwilioAdapter implements INotificationProvider {
     return { id: res.sid, status: res.status };
   }
 
-  async sendEmail() {
+  async sendEmail(to: string, subject: string, body: string): Promise<{ id: string; status: string; }> {
     throw new Error('Twilio adapter does not support email. Use SendGridAdapter instead.');
   }
 }

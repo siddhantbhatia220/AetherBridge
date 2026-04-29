@@ -1,6 +1,6 @@
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { IStorageAdapter } from '../contracts/storage';
+import { IStorageAdapter } from '../contracts/storage.js';
 
 export class S3Adapter implements IStorageAdapter {
   private client: S3Client;

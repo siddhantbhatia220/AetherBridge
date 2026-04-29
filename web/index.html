@@ -12,6 +12,7 @@
 </head>
 <body>
     <div id="custom-cursor"></div>
+    <div id="toast-container"></div>
     <div class="glow-bg"></div>
     
     <nav>
@@ -61,7 +62,43 @@
             </div>
         </section>
 
-        <section id="features" class="features">
+        <section id="photo-extractor" class="extractor">
+            <div class="section-header">
+                <h2>Photo Data Extractor</h2>
+                <p>Upload up to 50 photos to automatically segregate names and phone numbers.</p>
+            </div>
+            
+            <div class="extractor-container">
+                <div class="upload-zone" id="drop-zone">
+                    <div class="icon">📸</div>
+                    <p>Click or Drag Photos Here</p>
+                    <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
+                </div>
+
+                <div class="gallery-view" id="gallery">
+                    <!-- Photos will appear here -->
+                </div>
+
+                <div class="action-bar" id="action-bar" style="display: none;">
+                    <button class="btn-primary" id="btn-extract">Extract Data</button>
+                    <button class="btn-secondary" id="btn-download" style="display: none;">Download Excel</button>
+                </div>
+
+                <div class="results-table" id="results-table" style="display: none;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone Number</th>
+                                <th>Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
             <div class="section-header">
                 <h2>Why AetherBridge?</h2>
                 <p>Engineered for developers who hate plumbing and love building.</p>

@@ -1,0 +1,10 @@
+{
+  "name": "@aether/sdk",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AetherBridge SDK",
+  "main": "index.ts",
+  "scripts": {
+    "build": "echo No build step needed for SDK"
+  }
+}

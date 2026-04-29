@@ -9,13 +9,22 @@
     "proxy",
     "web"
   ],
+  "bin": {
+    "aether": "./bin/aether.ts"
+  },
   "scripts": {
     "dev:proxy": "npm run dev --workspace=proxy",
     "dev:web": "npm run dev --workspace=web",
-    "build": "npm run build --workspaces"
+    "build": "npm run build --workspaces",
+    "aether": "tsx bin/aether.ts"
+  },
+  "dependencies": {
+    "commander": "^11.1.0",
+    "js-yaml": "^4.1.1"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "rimraf": "^5.0.0"
+    "rimraf": "^5.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.0.0"
   }
 }

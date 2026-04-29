@@ -1,74 +1,61 @@
-# 🌌 AetherBridge
+# AetherBridge: The Universal Infrastructure Layer
 
-**The Final Integration You’ll Ever Write.**
+![AetherBridge](https://img.shields.io/badge/Aether-Bridge-7c3aed?style=for-the-badge)
 
-AetherBridge is a high-performance, universal API translation layer designed to eliminate integration friction. Instead of wrestling with fragmented SDKs, you write code against the **Aether Standard**.
+AetherBridge is a powerful API translation layer designed to decouple application logic from third-party service implementations. It allows developers to integrate "Bridges" (Auth, Payments, Storage, AI, Data) once and switch between providers (Stripe vs PayPal, Supabase vs Auth0) with zero code changes.
 
----
+## 🚀 The Core Vision
 
-## 🚀 Key Features
+Development today is bogged down by "plumbing"—writing boilerplate for individual SDKs, handling different error formats, and being locked into specific vendors. AetherBridge solves this by providing:
 
-- **Standardized Interfaces**: One method signature for all providers (Stripe, Twilio, AWS, etc.).
-- **Shadow Kernel**: Local development mocking engine. Develop offline with zero API keys.
-- **Smart Routing**: Intelligent proxy that switches providers based on cost, health, or latency.
-- **The "Eject" Command**: Zero vendor lock-in. Advanced AST-based code transformation removes Aether calls safely.
-- **Time Machine Replay**: Persistent request logging via SQLite. Replay production errors anytime.
-- **Config-Driven Architecture**: Switch between local Shadow Kernel and real providers (Stripe, Twilio, Supabase, AWS S3).
+1.  **Unified Contracts**: Use a single interface for every category of service.
+2.  **The Shadow Kernel**: A local interceptor that mocks every bridge, allowing for 100% offline development without API keys.
+3.  **Smart Routing**: A proxy server that can reroute requests based on health, cost, or latency.
+4.  **The Eject Button**: If you ever want to leave, AetherBridge can rewrite your source code back to native SDK calls.
 
----
+## ✨ Key Features
 
-## 🛠 Production Readiness
+### 🛡️ Shadow Kernel (Local Interception)
+Develop your entire app without a single API key. AetherBridge intercepts calls to `bridge.pay` or `bridge.auth` and handles them locally using a SQLite-backed mock engine.
 
-AetherBridge is 100% real-world compatible. Set `mode: production` in `aether-config.yaml` to activate high-performance SDKs.
+### 📦 Unified Utility Bridges
+- **AetherData**: Handles complex data tasks like international phone parsing and validation.
+- **AetherAI**: A standardized bridge for Generative AI (Gemini, GPT).
+- **AetherImage**: (Coming Soon) Bulk data extraction from images.
 
-### Environment Variables
-For production mode, set the following:
-- **Payments**: `STRIPE_SECRET_KEY`
-- **Auth**: `SUPABASE_URL`, `SUPABASE_KEY`
-- **Notifications**: `TWILIO_SID`, `TWILIO_TOKEN`, `TWILIO_FROM`
-- **Storage**: `AWS_REGION`, `AWS_BUCKET`, `AWS_ACCESS_KEY`, `AWS_SECRET_KEY`
+### 🛠️ Production-Grade Proxy
+A native ESM proxy server built with Express and SQLite that redacts sensitive data, performs pre-flight key validation, and provides a real-time monitoring dashboard.
 
-## 🛠 Directory Structure
+## 🛠️ Getting Started
 
-```text
-/aetherbridge-root
-├── /contracts        # Shared TypeScript Interfaces
-├── /adapters         # Provider implementations (Shadow, Stripe, etc.)
-├── /sdk              # The client-side library (NPM package)
-├── /proxy            # The Production Bridge (Express/Node.js)
-├── /web              # Landing Page & Dashboard (Vite + Vanilla CSS)
-└── aether-config.yaml # Routing & Provider Configuration
-```
-
----
-
-## 📦 Quick Start
-
-### 1. Install the SDK
+### Installation
 ```bash
-npm install @aetherbridge/sdk
+npm install @aether/sdk
 ```
 
-### 2. Initialize
-```typescript
-import { bridge } from '@aetherbridge/sdk';
-
-// This works regardless of the provider!
-const user = await bridge.auth.signUp('user@example.com', 'password123');
+### Initializing the Bridge
+```bash
+npx aether init
 ```
 
+### Starting the Shadow Kernel
+```bash
+npx aether shadow
+```
+
+## 🏗️ How It Works
+
+1.  **SDK Layer**: Your app calls a generic method like `bridge.pay.initialize()`.
+2.  **Proxy Layer**: The SDK sends the request to the AetherBridge Proxy (Local or Cloud).
+3.  **Adapter Layer**: The Proxy selects the correct Adapter (Stripe, Twilio, Shadow) based on your `aether-config.yaml`.
+4.  **Response**: The standardized response is returned to your app, regardless of which provider was used.
+
 ---
 
-## 🛡 Shadow Kernel (Local Dev)
-When `NODE_ENV=development`, AetherBridge automatically routes calls to the local Shadow Kernel. It intercepts API calls and returns mock data, logging the interaction to your terminal.
+## 💎 Why AetherBridge is Different
+- **Zero Lock-in**: The only platform with a literal "Eject" command that gives you back native code.
+- **Developer First**: Focus on your product, not the documentation of 50 different APIs.
+- **Privacy Centric**: Log scrubbing and local-first development ensure your secrets stay secret.
 
 ---
-
-## 📜 Legal
-- [Privacy Policy](web/public/privacy.html)
-- [Terms of Service](web/public/terms.html)
-
----
-
-## ⚖ License
-MIT © 2026 AetherBridge.
+© 2026 AetherBridge Team. Standardizing the Cloud Interface.

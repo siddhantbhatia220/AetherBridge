@@ -1,7 +1,16 @@
 import fs from 'fs';
 import yaml from 'js-yaml';
 import { StripeAdapter } from '../adapters/payments-stripe.js';
-import { ShadowPaymentAdapter, ShadowAuthAdapter, ShadowNotificationAdapter, ShadowStorageAdapter } from '../adapters/shadow.js';
+import { 
+  ShadowPaymentAdapter, 
+  ShadowAuthAdapter, 
+  ShadowNotificationAdapter, 
+  ShadowStorageAdapter,
+  ShadowDataAdapter,
+  DataPhoneNumberAdapter,
+  ShadowAIAdapter,
+  GeminiAIAdapter
+} from '../adapters/shadow.js';
 import { TwilioAdapter } from '../adapters/notify-twilio.js';
 import { S3Adapter } from '../adapters/storage-s3.js';
 import { SupabaseAuthAdapter } from '../adapters/auth-supabase.js';
@@ -42,6 +51,20 @@ export class ProviderFactory {
       );
     }
     return new ShadowStorageAdapter();
+  }
+
+  static createDataProvider(config) {
+    if (config.mode === 'production' && config.services.data?.provider === 'libphonenumber') {
+      return new DataPhoneNumberAdapter();
+    }
+    return new ShadowDataAdapter();
+  }
+
+  static createAIProvider(config) {
+    if (config.mode === 'production' && config.services.ai?.provider === 'gemini') {
+      return new GeminiAIAdapter(process.env.GEMINI_API_KEY || '');
+    }
+    return new ShadowAIAdapter();
   }
 }
 
