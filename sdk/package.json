@@ -1,10 +1,17 @@
 {
   "name": "@aether/sdk",
   "version": "1.0.0",
-  "private": true,
-  "description": "AetherBridge SDK",
-  "main": "index.ts",
+  "description": "The unified infrastructure SDK for AetherBridge.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
   "scripts": {
-    "build": "echo No build step needed for SDK"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0"
   }
 }
