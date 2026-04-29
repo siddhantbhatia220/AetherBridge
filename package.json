@@ -13,8 +13,9 @@
     "aether": "./bin/aether.ts"
   },
   "scripts": {
+    "dev": "concurrently \"npm run dev:proxy\" \"npm run dev:web\"",
     "dev:proxy": "npm run dev --workspace=proxy",
-    "dev:web": "npm run dev --workspace=web",
+    "dev:web": "npm run dev --workspace=web -- --port 3001",
     "build": "npm run build --workspaces",
     "aether": "tsx bin/aether.ts"
   },
@@ -23,6 +24,7 @@
     "js-yaml": "^4.1.1"
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "rimraf": "^5.0.0",
     "tsx": "^4.21.0",
     "typescript": "^5.0.0"
