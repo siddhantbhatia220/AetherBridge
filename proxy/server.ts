@@ -190,6 +190,13 @@ async function startServer() {
         }
     });
 
+    app.post('/webhook/simulate', async (req, res) => {
+        const { type } = req.body;
+        console.log(`\x1b[33m[WEBHOOK SIMULATOR]\x1b[0m Received ${type}`);
+        await logToDB(`webhook_${type}`, { simulated: true }, 'success');
+        res.json({ status: 'delivered' });
+    });
+
     app.listen(PORT, () => {
         console.log(`\x1b[35m[AetherBridge Proxy]\x1b[0m Listening on port ${PORT}`);
         if (config.mode === 'development') {
