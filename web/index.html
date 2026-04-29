@@ -3,26 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AetherBridge | The Final Integration You’ll Ever Write</title>
-    <meta name="description" content="AetherBridge is a universal API translation layer that eliminates integration friction.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <title>AetherBridge | Standardizing the Cloud Interface</title>
+    <meta name="description" content="The universal infrastructure layer that decouples your app from third-party SDKs.">
     <link rel="stylesheet" href="./src/css/main.css">
 </head>
 <body>
     <div id="custom-cursor"></div>
     <div id="toast-container"></div>
-    <div class="glow-bg"></div>
     
-    <nav>
+    <nav id="navbar">
         <div class="nav-container">
             <div class="logo">Aether<span>Bridge</span></div>
             <div class="nav-links">
+                <a href="#photo-extractor">Extractor</a>
                 <a href="#features">Features</a>
-                <a href="/dashboard.html">Dev Dashboard</a>
-                <a href="#docs">Docs</a>
-                <button class="btn-primary">Get Started</button>
+                <a href="http://localhost:3000/">Dashboard</a>
+                <button class="btn-primary">Get API Access</button>
             </div>
         </div>
     </nav>
@@ -30,166 +26,141 @@
     <main>
         <section class="hero">
             <div class="hero-content">
-                <div class="badge">v1.0.0 is live</div>
-                <h1>The Final Integration <br><span>You’ll Ever Write.</span></h1>
-                <p>Stop wrestling with third-party SDKs. One standard, zero lock-in, and a local Shadow Kernel that works even without internet.</p>
+                <div class="badge">AetherBridge v1.2 Ready</div>
+                <h1>One Bridge. <br><span>Infinite Scale.</span></h1>
+                <p>The first universal translator for cloud services. Switch between Stripe, PayPal, Supabase, and Gemini with a single line of code.</p>
                 <div class="hero-btns">
-                    <button class="btn-primary-lg">Start Building Free</button>
-                    <button class="btn-secondary-lg">View Documentation</button>
+                    <button class="btn-primary btn-primary-lg">Start Building Free</button>
+                    <button class="btn-secondary-lg">View Infrastructure</button>
                 </div>
             </div>
             <div class="hero-visual">
                 <div class="code-card">
                     <div class="code-header">
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="title">main.ts</span>
+                        <span class="dot dot-red"></span>
+                        <span class="dot dot-yellow"></span>
+                        <span class="dot dot-green"></span>
                     </div>
                     <div class="code-body">
-                        <pre><code><span class="keyword">import</span> { bridge } <span class="keyword">from</span> <span class="string">'@aether/sdk'</span>;
+                        <pre><code><span style="color: #c678dd">import</span> { bridge } <span style="color: #c678dd">from</span> <span style="color: #98c379">'@aether/sdk'</span>;
 
-<span class="comment">// Works in Dev (Shadow) & Prod</span>
-<span class="keyword">const</span> res = <span class="keyword">await</span> bridge.pay.<span class="func">initializePayment</span>({
-  amount: <span class="number">99</span>,
-  currency: <span class="string">'USD'</span>
+<span style="color: #5c6370">// Standardized Data Extraction</span>
+<span style="color: #c678dd">const</span> result = <span style="color: #c678dd">await</span> bridge.data.<span style="color: #61afef">parsePhone</span>({
+  text: <span style="color: #98c379">"Call +1 650 253 0000"</span>
 });
 
-<span class="comment">// No more Stripe vs PayPal logic.</span>
-<span class="func">console</span>.<span class="func">log</span>(res.clientSecret);</code></pre>
+<span style="color: #5c6370">// Output is ALWAYS consistent</span>
+<span style="color: #61afef">console</span>.<span style="color: #61afef">log</span>(result.countryCode); <span style="color: #5c6370">// US</span></code></pre>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="photo-extractor" class="extractor">
-            <div class="section-header">
-                <h2>Photo Data Extractor</h2>
-                <p>Upload up to 50 photos to automatically segregate names and phone numbers.</p>
-            </div>
-            
             <div class="extractor-container">
+                <div class="section-header">
+                    <h2>Advanced AI Extractor</h2>
+                    <p>Bulk process images into structured datasets using the AetherAI Bridge.</p>
+                </div>
+                
                 <div class="upload-zone" id="drop-zone">
-                    <div class="icon">📸</div>
-                    <p>Click or Drag Photos Here</p>
+                    <span class="icon">📸</span>
+                    <h3>Drop your photos here</h3>
+                    <p>Maximum 50 photos per batch. Supported: JPG, PNG, WEBP.</p>
                     <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
                 </div>
 
-                <div class="gallery-view" id="gallery">
-                    <!-- Photos will appear here -->
-                </div>
+                <div class="gallery-view" id="gallery"></div>
 
-                <div class="action-bar" id="action-bar" style="display: none;">
-                    <button class="btn-primary" id="btn-extract">Extract Data</button>
-                    <button class="btn-secondary" id="btn-download" style="display: none;">Download Excel</button>
+                <div class="action-bar" id="action-bar" style="display: none; justify-content: center; gap: 1rem; margin: 3rem 0;">
+                    <button class="btn-primary" id="btn-extract">Extract Data from Photos</button>
+                    <button class="btn-secondary-lg" id="btn-download" style="display: none;">Download Excel (.xlsx)</button>
                 </div>
 
                 <div class="results-table" id="results-table" style="display: none;">
                     <table>
                         <thead>
                             <tr>
-                                <th>Name</th>
+                                <th>Detected Name</th>
                                 <th>Phone Number</th>
-                                <th>Confidence</th>
+                                <th>Extraction Confidence</th>
                             </tr>
                         </thead>
-                        <tbody id="results-body">
-                        </tbody>
+                        <tbody id="results-body"></tbody>
                     </table>
                 </div>
             </div>
         </section>
+
+        <section id="features" class="features">
             <div class="section-header">
-                <h2>Why AetherBridge?</h2>
-                <p>Engineered for developers who hate plumbing and love building.</p>
+                <h2>Engineered for Excellence</h2>
+                <p>AetherBridge isn't just a proxy; it's a paradigm shift in how you build.</p>
             </div>
             <div class="feature-grid">
                 <div class="feature-card">
                     <div class="icon">🛡️</div>
                     <h3>Shadow Kernel</h3>
-                    <p>Develop offline with local mocks that behave exactly like real APIs.</p>
+                    <p>A full local environment that mirrors production APIs. Zero keys required for development.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="icon">🔀</div>
-                    <h3>Smart Routing</h3>
-                    <p>Automatically switch providers based on cost, health, or latency.</p>
+                    <div class="icon">🔄</div>
+                    <h3>The Eject Engine</h3>
+                    <p>Tired of Aether? One command rewrites your source code back to native SDK calls. No lock-in.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="icon">⚡</div>
-                    <h3>Zero Latency</h3>
-                    <p>Edge-compatible proxy ensures your integrations never slow you down.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon">📤</div>
-                    <h3>The Eject Button</h3>
-                    <p>Change your mind? Eject to native code anytime. No vendor lock-in.</p>
+                    <div class="icon">🔍</div>
+                    <h3>Deep Redaction</h3>
+                    <p>Sensitive data is automatically scrubbed before it ever hits your logs or database.</p>
                 </div>
             </div>
-        </section>
-        <section id="pricing" class="pricing">
-            <div class="section-header">
-                <h2>Simple, Transparent Pricing</h2>
-                <p>Build for free, scale as you grow.</p>
-            </div>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>Hacker</h3>
-                    <div class="price">$0<span>/mo</span></div>
-                    <ul>
-                        <li>Unlimited Shadow Kernel</li>
-                        <li>All Community Adapters</li>
-                        <li>Local Dev Dashboard</li>
-                    </ul>
-                    <button class="btn-secondary-lg">Get Started</button>
-                </div>
-                <div class="pricing-card featured">
-                    <div class="save-badge">Popular</div>
-                    <h3>Pro</h3>
-                    <div class="price">$19<span>/mo</span></div>
-                    <ul>
-                        <li>Intelligent Failover</li>
-                        <li>Time Machine Replay</li>
-                        <li>Custom Adapter Support</li>
-                        <li>Priority Support</li>
-                    </ul>
-                    <button class="btn-primary-lg">Go Pro</button>
-                </div>
-            </div>
-        </section>
-
         <section class="cta">
             <div class="cta-card">
-                <h2>Ready to Eject the Plumbing?</h2>
-                <p>Join 5,000+ developers building with AetherBridge.</p>
-                <button class="btn-primary-lg">Start Building for Free</button>
+                <h2>Join the Revolution.</h2>
+                <p>Start building provider-agnostic infrastructure today.</p>
+                <button class="btn-primary-lg">Claim Your API Key</button>
             </div>
         </section>
     </main>
 
     <footer>
         <div class="footer-container">
-            <div class="footer-info">
+            <div class="footer-brand">
                 <div class="logo">Aether<span>Bridge</span></div>
                 <p>Standardizing the Cloud Interface.</p>
             </div>
-            <div class="footer-links">
-                <div class="link-group">
-                    <h4>Product</h4>
-                    <a href="/docs">Documentation</a>
-                    <a href="/changelog">Changelog</a>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Ecosystem</h4>
+                    <a href="#">Adapters</a>
+                    <a href="#">CLI Tool</a>
+                    <a href="#">Shadow Kernel</a>
                 </div>
-                <div class="link-group">
+                <div class="footer-col">
+                    <h4>Developers</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">API Status</a>
+                    <a href="#">Open Source</a>
+                </div>
+                <div class="footer-col">
                     <h4>Legal</h4>
-                    <a href="/privacy">Privacy Policy</a>
-                    <a href="/terms">Terms of Service</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2026 AetherBridge. All rights reserved.
+            &copy; 2026 AetherBridge. All rights reserved. Built for the modern web.
         </div>
     </footer>
 
     <script type="module" src="./src/js/main.js"></script>
+    <script>
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+    </script>
 </body>
 </html>
