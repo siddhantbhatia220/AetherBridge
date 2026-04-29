@@ -71,6 +71,16 @@
                     <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
                 </div>
 
+                <div class="progress-container" id="progress-container" style="display: none; margin-top: 2rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                        <span id="progress-text">Processing images...</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
+                        <div id="progress-bar" style="width: 0%; height: 100%; background: var(--primary); transition: width 0.3s;"></div>
+                    </div>
+                </div>
+
                 <div class="gallery-view" id="gallery"></div>
 
                 <div class="action-bar" id="action-bar" style="display: none; justify-content: center; gap: 1rem; margin: 3rem 0;">
@@ -133,20 +143,20 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <h4>Ecosystem</h4>
-                    <a href="#">Adapters</a>
-                    <a href="#">CLI Tool</a>
-                    <a href="#">Shadow Kernel</a>
+                    <a href="adapters/">Adapters</a>
+                    <a href="bin/aether.ts">CLI Tool</a>
+                    <a href="http://localhost:3000">Shadow Kernel</a>
                 </div>
                 <div class="footer-col">
                     <h4>Developers</h4>
-                    <a href="#">Documentation</a>
-                    <a href="#">API Status</a>
-                    <a href="#">Open Source</a>
+                    <a href="DOCS.md">Documentation</a>
+                    <a href="ARCHITECTURE.md">Architecture</a>
+                    <a href="https://github.com/aetherbridge">Open Source</a>
                 </div>
                 <div class="footer-col">
                     <h4>Legal</h4>
-                    <a href="#">Privacy</a>
-                    <a href="#">Terms</a>
+                    <a href="PRIVACY.md">Privacy</a>
+                    <a href="TERMS.md">Terms</a>
                 </div>
             </div>
         </div>
