@@ -73,7 +73,7 @@ async function startServer() {
     });
 
     // --- Payment Routes ---
-    app.post('/pay/initialize', async (req, res) => {
+    app.post('/pay/initializePayment', async (req, res) => {
         try {
             const { amount, currency, customerId } = req.body;
             const session = await pay.initializePayment(amount, currency, customerId);
@@ -109,7 +109,7 @@ async function startServer() {
     });
 
     // --- Data Routes ---
-    app.post('/data/parse-phone', async (req, res) => {
+    app.post('/data/parsePhone', async (req, res) => {
         try {
             const { text, region } = req.body;
             const result = await data.parsePhone(text, region);
@@ -154,7 +154,7 @@ async function startServer() {
         }
     });
 
-    app.post('/ai/extract-data-from-images', async (req, res) => {
+    app.post('/ai/extractDataFromImages', async (req, res) => {
         try {
             const { images } = req.body; // Array of base64
             const result = await aiProvider.extractDataFromImages(images);
