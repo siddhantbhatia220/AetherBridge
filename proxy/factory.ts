@@ -14,13 +14,21 @@ import {
 import { TwilioAdapter } from '../adapters/notify-twilio.js';
 import { S3Adapter } from '../adapters/storage-s3.js';
 import { SupabaseAuthAdapter } from '../adapters/auth-supabase.js';
+import { FailoverEngine } from './failover.js';
 
 export class ProviderFactory {
   static createPaymentProvider(config) {
-    if (config.mode === 'production' && config.services.payments.provider === 'stripe') {
-      return new StripeAdapter(process.env.STRIPE_SECRET_KEY);
+    const primary = (config.mode === 'production' && config.services.payments.provider === 'stripe')
+      ? new StripeAdapter(process.env.STRIPE_SECRET_KEY)
+      : new ShadowPaymentAdapter();
+
+    if (config.services.payments.secondary) {
+        // Simple mock for secondary (could be PayPal, etc)
+        const secondary = new ShadowPaymentAdapter(); 
+        return FailoverEngine.createProxy(primary, secondary, 'payments');
     }
-    return new ShadowPaymentAdapter();
+
+    return primary;
   }
 
   static createAuthProvider(config) {
