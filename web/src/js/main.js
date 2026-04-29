@@ -71,22 +71,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnExtract) {
         btnExtract.addEventListener('click', async () => {
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercent = document.getElementById('progress-percent');
+            const progressText = document.getElementById('progress-text');
+
             btnExtract.innerText = 'Extracting...';
             btnExtract.disabled = true;
+            progressContainer.style.display = 'block';
+            extractedData = [];
 
             try {
-                const base64Images = await Promise.all(selectedFiles.map(file => {
-                    return new Promise((resolve) => {
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    const file = selectedFiles[i];
+                    progressText.innerText = `Processing image ${i + 1} of ${selectedFiles.length}...`;
+                    const percent = Math.round(((i) / selectedFiles.length) * 100);
+                    progressBar.style.width = `${percent}%`;
+                    progressPercent.innerText = `${percent}%`;
+
+                    const base64 = await new Promise((resolve) => {
                         const reader = new FileReader();
                         reader.onload = (e) => resolve(e.target.result);
                         reader.readAsDataURL(file);
                     });
-                }));
 
-                showToast("Sending images to AetherAI Bridge...", "success");
-                extractedData = await bridge.ai.extractDataFromImages({ images: base64Images });
+                    // We call the bridge per image to show progress
+                    const [result] = await bridge.ai.extractDataFromImages({ images: [base64] });
+                    extractedData.push(result);
+                    
+                    renderResults(extractedData);
+                }
+
+                progressBar.style.width = `100%`;
+                progressPercent.innerText = `100%`;
+                progressText.innerText = `Extraction complete!`;
                 
-                renderResults(extractedData);
                 btnDownload.style.display = 'block';
                 resultsTable.style.display = 'block';
                 showToast("Extraction complete! Segregated name and phone numbers.", "success");
@@ -96,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } finally {
                 btnExtract.innerText = 'Extract Data';
                 btnExtract.disabled = false;
+                setTimeout(() => progressContainer.style.display = 'none', 3000);
             }
         });
     }
