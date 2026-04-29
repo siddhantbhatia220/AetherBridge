@@ -76,9 +76,10 @@ async function startServer() {
     app.post('/pay/initializePayment', async (req, res) => {
         try {
             const { amount, currency, customerId } = req.body;
-            const session = await pay.initializePayment(amount, currency, customerId);
-            await logToDB('payment_init', { amount, currency }, 'success');
-            res.json(session);
+            const result = await pay.initializePayment(amount, currency, customerId);
+            const status = result._aether_status === 'failover_success' ? 'failover' : 'success';
+            await logToDB('payment_init', { amount, currency }, status);
+            res.json(result);
         } catch (err: any) {
             res.status(500).json({ error: err.message });
         }
