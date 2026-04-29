@@ -1,9 +1,7 @@
-node_modules/
-dist/
+node_modules
 .env
-.DS_Store
-*.log
-web/dist/
-proxy/node_modules/
-web/node_modules/
-shadow-db.json
+shadow-bridge.db
+shadow-storage
+dist
+.aether-brain.md
+*.xlsx
