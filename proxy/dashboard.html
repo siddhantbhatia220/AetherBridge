@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AetherBridge Shadow Control</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌌</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -231,7 +232,22 @@
                     <span class="sidebar-label">Active Requests</span>
                     <div class="stat" id="stat-total">0</div>
                 </div>
-                <div class="card sidebar-item">
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+            <h2>Webhook Simulator</h2>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <select id="webhook-type" style="background: #1a1a1e; color: white; border: 1px solid var(--border); padding: 0.5rem; border-radius: 4px;">
+                    <option value="payment.succeeded">Payment Succeeded (Stripe)</option>
+                    <option value="user.created">User Created (Supabase)</option>
+                    <option value="file.uploaded">File Uploaded (S3)</option>
+                </select>
+                <button onclick="simulateWebhook()" style="background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Fire Webhook</button>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">This simulates a production service calling your /webhook endpoint locally.</p>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
                     <span class="sidebar-label">Active Adapters</span>
                     <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
                         <span style="padding: 4px 10px; background: rgba(124, 77, 255, 0.1); border: 1px solid rgba(124, 77, 255, 0.2); border-radius: 4px; font-size: 0.75rem;">Auth</span>
@@ -293,7 +309,22 @@
             });
         }
 
-        setInterval(fetchLogs, 1000);
+        async function simulateWebhook() {
+            const type = document.getElementById('webhook-type').value;
+            try {
+                await fetch('/webhook/simulate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type })
+                });
+                alert(`Webhook ${type} fired! Check logs.`);
+                fetchLogs();
+            } catch (e) {
+                alert('Simulation failed.');
+            }
+        }
+
+        setInterval(fetchLogs, 5000);
         fetchLogs();
     </script>
 </body>
