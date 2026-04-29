@@ -295,14 +295,24 @@
                 
                 const date = new Date(log.timestamp).toLocaleTimeString();
                 
+                const statusColors = {
+                    'success': 'var(--success)',
+                    'error': '#ff5252',
+                    'failover': '#ffab40'
+                };
+                const color = statusColors[log.status] || 'var(--text-dim)';
+
                 item.innerHTML = `
                     <div class="log-header">
-                        <span class="method">${log.method}</span>
+                        <div>
+                            <span class="method">${log.method}</span>
+                            <span style="font-size: 0.6rem; color: ${color}; border: 1px solid ${color}; padding: 1px 4px; border-radius: 3px; text-transform: uppercase; margin-left: 8px;">${log.status}</span>
+                        </div>
                         <span class="timestamp">${date}</span>
                     </div>
-                    <div class="log-body">${log.data}</div>
+                    <div class="log-body">${log.payload}</div>
                     <div class="json-preview">
-                        <pre>${JSON.stringify(JSON.parse(log.data), null, 2)}</pre>
+                        <pre>${JSON.stringify(JSON.parse(log.payload), null, 2)}</pre>
                     </div>
                 `;
                 container.appendChild(item);
