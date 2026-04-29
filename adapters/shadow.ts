@@ -56,21 +56,64 @@ export class ShadowAIAdapter implements IAIBridge {
   }
 }
 
-// Placeholder for real Gemini adapter (requires @google/generative-ai)
+// Real Gemini adapter using @google/generative-ai
+import { GoogleGenerativeAI } from '@google/generative-ai';
+
 export class GeminiAIAdapter implements IAIBridge {
-  constructor(private apiKey: string) {}
+  private genAI: GoogleGenerativeAI;
+
+  constructor(private apiKey: string) {
+    this.genAI = new GoogleGenerativeAI(apiKey);
+  }
+
   async summarize(text: string): Promise<string> {
-    return `[GEMINI] Summary of: ${text.substring(0, 50)}...`;
+    const model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+    const result = await model.generateContent(`Summarize this text: ${text}`);
+    return result.response.text();
   }
+
   async analyze(data: any): Promise<any> {
-    return { analysis: "Deep insight from Gemini" };
+    const model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+    const result = await model.generateContent(`Analyze this data and provide insights: ${JSON.stringify(data)}`);
+    return { analysis: result.response.text() };
   }
+
   async generate(prompt: string): Promise<string> {
-    return `[GEMINI] Responding to: ${prompt}`;
+    const model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
+    const result = await model.generateContent(prompt);
+    return result.response.text();
   }
+
   async extractDataFromImages(images: string[]): Promise<any[]> {
-    // In a real implementation, you'd send base64 to Gemini Pro Vision
-    return [{ name: "Extracted Name", phone: "+1 234 567 890" }];
+    const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const results: any[] = [];
+
+    for (const base64Image of images) {
+        try {
+            // Remove data:image/png;base64, prefix
+            const base64Data = base64Image.split(',')[1] || base64Image;
+            
+            const prompt = "Extract the name and phone number from this image. Return as a JSON object: { \"name\": \"...\", \"phone\": \"...\" }. If not found, use 'Unknown'.";
+            
+            const result = await model.generateContent([
+                prompt,
+                { inlineData: { data: base64Data, mimeType: "image/png" } }
+            ]);
+
+            const text = result.response.text();
+            // Simple JSON extraction from response
+            const jsonMatch = text.match(/\{.*\}/s);
+            if (jsonMatch) {
+                results.push(JSON.parse(jsonMatch[0]));
+            } else {
+                results.push({ name: "Unknown", phone: "Not Found", raw: text });
+            }
+        } catch (e) {
+            console.error("[GEMINI ERROR]", e);
+            results.push({ name: "Error", phone: "Extraction Failed" });
+        }
+    }
+    return results;
   }
 }
 
